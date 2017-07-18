@@ -17,6 +17,7 @@ public class UserTest {
     private User newUser;
     private Board board;
     private Question question;
+    private Answer answer;
 
 
     @Rule
@@ -28,16 +29,24 @@ public class UserTest {
         user = new User(board, "User");
         newUser = new User(board, "NewUser");
         question = user.askQuestion("Question?");
+        answer = newUser.answerQuestion(question, "answer");
 
 
     }
 
     @Test
-    public void reputationGoesUpIfQuestionIsUpVoted() throws Exception {
+    public void reputationGoesUpWhenQuestionIsUpVoted() throws Exception {
         newUser.upVote(question);
 
         assertEquals(5, user.getReputation());
 
+    }
+
+    @Test
+    public void answerUpVoteGoesUpByTenPoints() throws Exception {
+        user.upVote(answer);
+
+        assertEquals(10, newUser.getReputation());
     }
 
 }
