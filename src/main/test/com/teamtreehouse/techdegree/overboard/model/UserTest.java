@@ -1,6 +1,5 @@
 package com.teamtreehouse.techdegree.overboard.model;
 
-import com.teamtreehouse.techdegree.overboard.exc.AnswerAcceptanceException;
 import com.teamtreehouse.techdegree.overboard.exc.VotingException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -13,9 +12,9 @@ import static org.junit.Assert.*;
  * Created by Chris on 7/17/17.
  */
 public class UserTest {
+    private Board board;
     private User user;
     private User newUser;
-    private Board board;
     private Question question;
     private Answer answer;
 
@@ -49,4 +48,50 @@ public class UserTest {
         assertEquals(10, newUser.getReputation());
     }
 
+    @Test
+    public void acceptedAnswerAddsToReputation() throws Exception {
+        user.acceptAnswer(answer);
+
+        assertEquals(15, newUser.getReputation());
+    }
+
+    @Test
+    public void userCannotUpVoteSelf() throws Exception {
+        thrown.expect(VotingException.class);
+        thrown.expectMessage("You cannot vote for yourself!");
+
+        user.upVote(question);
+    }
+
+    @Test
+    public void userCannotDownVoteSelf() throws Exception {
+        thrown.expect(VotingException.class);
+        thrown.expectMessage("You cannot vote for yourself!");
+
+        user.downVote(question);
+    }
+
+
+    @Test
+    public void userCannotUpVoteTheirAnswer() throws Exception {
+        thrown.expect(VotingException.class);
+        thrown.expectMessage("You cannot vote for yourself!");
+
+        newUser.upVote(answer);
+    }
+
+    @Test
+    public void userCannotDownVoteTheirAnswer() throws Exception {
+        thrown.expect(VotingException.class);
+        thrown.expectMessage("You cannot vote for yourself!");
+
+        newUser.downVote(answer);
+    }
+
+    @Test
+    public void originalUserAcceptsAnswer() throws Exception {
+        user.acceptAnswer(answer);
+
+        assertTrue(answer.isAccepted());
+    }
 }
